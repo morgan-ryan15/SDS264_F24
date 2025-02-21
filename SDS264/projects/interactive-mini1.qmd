@@ -1,6 +1,7 @@
 ---
 title: "interactive-mini1"
 format: html
+author: Morgan Ryan
 editor_options: 
   chunk_output_type: console
 ---
@@ -17,7 +18,7 @@ library(htmltools)
 library(glue)
 library(sf)
 #data for proj
-death_data <- read_csv("~/Documents/SDS-264/Data/death.csv")
+death_data <- read_csv("SDS264/Data/death.csv")
 
 #data for map
 us_states <- map_data("state")

@@ -1,9 +1,13 @@
 ---
 title: "static-mini1"
-format: html
+format: pdf
+author: Morgan Ryan
 editor_options: 
   chunk_output_type: console
 ---
+
+[Link To Interactive Plots](https://github.com/morgan-ryan15/SDS264_F24/blob/main/SDS264/projects/interactive-mini1.qmd)
+
 
 ```{r}
 #| message: false
@@ -17,7 +21,7 @@ library(htmltools)
 library(glue)
 library(sf)
 #data for proj
-death_data <- read_csv("~/Documents/SDS-264/Data/death.csv")
+death_data <- read_csv("~/SDS264_F24/SDS264/Data/death.csv")
 
 #data for map
 us_states <- map_data("state")
@@ -67,7 +71,12 @@ num_death_data |>
     fill = "Number of Deaths",
     caption = "Data Source: data.gov")
 ```
-  
+Description Graph #1:
+
+
+Alt-Text Graph #1:
+
+
 
 ```{r}
 #Graph #2: Static with categorical value
@@ -114,5 +123,5 @@ cat_death_data <- death_data |>
 
 ```
 
-
+Description #2:
 
