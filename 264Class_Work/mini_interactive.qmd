@@ -1,0 +1,121 @@
+---
+title: "mini_interactive"
+format: html
+---
+
+
+```{r}
+#Interactive Graph #2 with Numeric Var
+
+#| warning: false
+
+#fixing up states data to match death data formatting of state names
+states <- states |>
+  mutate(name = str_to_lower(name))
+
+#begin filtering and mutating death data 
+int_death_data <- death_data |>
+  clean_names() |>
+  select(year, cause_name, state, deaths) |>
+  mutate(state = str_to_lower(state)) |>
+  filter(!(state %in% c("alaska", "hawaii", "united states"))) |>
+  filter(cause_name %in% c("Heart disease"), year == 2017) |>
+  #join death data with death data to get geometry column
+  right_join(states, by = c("state" = "name")) |>
+  rename(name = state) 
+
+#fixing error - geometry column not recognized, manually reassigning it as sf col 
+int_death_data2 <- sf::st_as_sf(int_death_data2) |>
+  filter(!(name %in% c("alaska", "hawaii", "puerto rico"))) 
+
+#defining color palette
+pal <- colorNumeric(palette = "PuRd", domain = c(0, 65000))
+
+#leaflet plot 
+leaflet(int_death_data2) |>
+  setView(-96, 37.8, 4) |>
+  addTiles() |>
+  addPolygons(
+    weight = 1, 
+    opacity = 1,
+    dashArray = "3",
+    fillOpacity = 0.8,
+    highlightOptions = highlightOptions(
+      weight = 5,
+      color = "#666", 
+      dashArray = "",
+      fillOpacity = 0.7,
+      bringToFront = TRUE),
+    popup = ~paste(name, "</br>", "amount of deaths due to heart disease: ", deaths),
+    color = ~pal(deaths)) |>
+    addLegend(pal = pal, values = ~int_death_data2$deaths, 
+          opacity = 0.7, title = "Number of Deaths", position = "bottomright")
+
+```
+
+```{r}
+
+#Graph #4
+#| warning: false
+
+states <- states |>
+  mutate(name = str_to_lower(name))
+
+int_cat_death_data <- death_data |>
+  #cleaning col names and selecting cols
+  clean_names() |>
+  select(year, cause_name, state, deaths) |>
+  mutate(state = str_to_lower(state)) |>
+  
+  #filtering cols for join
+  filter(!(state %in% c("alaska", "hawaii", "united states"))) |>
+  filter(cause_name %in% c("Alzheimer's disease", "Stroke"), year == 2017) |>
+  
+  
+  #fixing two rows per state 
+  pivot_wider(
+    names_from = cause_name,
+    values_from = deaths 
+  ) |>
+  
+  #get counts and condition for cat var 
+  clean_names() |>
+  count(state, stroke, alzheimers_disease) |>
+  mutate(death_type = ifelse(stroke > alzheimers_disease, "S", "A")) |>
+  
+  #right join to get states data
+  right_join(states, by = c("state" = "name")) |>
+  rename(name = state) 
+
+
+#fixes  error about not having my geometry column recognized
+int_cat_death_data2 <- sf::st_as_sf(int_cat_death_data2) |>
+  filter(!(name %in% c("alaska", "hawaii", "puerto rico"))) 
+
+pal <- colorFactor("PRGn", int_cat_death_data2$death_type)
+
+int_cat_death_data2 <- int_cat_death_data2 |>
+  mutate(labels = str_c(name, ": ", death_type))
+
+labels <- lapply(int_cat_death_data2$name, HTML)
+
+
+leaflet(int_cat_death_data2) |>
+  setView(-96, 37.8, 4) |>
+  addTiles() |>
+  addPolygons(
+    weight = 1, 
+    opacity = 1,
+    dashArray = "3",
+    fillOpacity = 0.8,
+    highlightOptions = highlightOptions(
+      weight = 5,
+      color = "#666", # state outline darkness
+      dashArray = "",
+      fillOpacity = 0.7,
+      bringToFront = TRUE),
+    label = labels,
+    color = ~pal(int_cat_death_data2$death_type)) |>
+    addLegend(pal = pal, values = ~int_cat_death_data2$death_type, 
+          opacity = 0.7, title = NULL, position = "bottomright")
+```

@@ -1,0 +1,75 @@
+---
+title: "Surprise"
+author: "FROM Z"
+output:
+  pdf_document: default
+editor_options:
+  chunk_output_type: console
+---
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+library(tidyverse)
+library(cowplot)
+```
+
+```{r, echo = FALSE}
+# heart
+data_frame <- data.frame(t = seq(0, 2*pi, by = 0.1))
+  xheart <- function(t) 16*sin(t)^3
+  yheart <- function(t) 13*cos(t)-5*cos(2*t)-2*cos(3*t)-cos(4*t)
+  data_frame$y = yheart(data_frame$t)
+  data_frame$x = xheart(data_frame$t)
+data <- data_frame |> 
+  as_tibble()
+```
+
+```{r, echo = FALSE}
+create <- function(color){
+data |>
+  ggplot(aes(x = x, y = y)) +
+  geom_polygon(fill = color, show.legend = FALSE) +
+    theme(
+      panel.background = element_blank(),
+      axis.title.x = element_blank(),
+      axis.text.x = element_blank(),
+      axis.ticks.x = element_blank(),
+      axis.title.y = element_blank(),
+      axis.text.y = element_blank(),
+      axis.ticks.y = element_blank())
+}
+
+pink <- create("pink")
+red <- create("red")
+hotpink <- create("hotpink")
+pink2 <- create("#F286DF")
+```
+
+```{r, echo = FALSE}
+title <- ggdraw() + 
+  draw_label(
+    "Happy Valentine's Day TO MORGAN",
+    fontface = 'bold',
+    x = 0,
+    hjust = 0
+  ) +
+  theme(
+    plot.margin = margin(0, 0, 0, 7)
+  )
+
+body <- plot_grid(pink, red, hotpink, pink2) 
+```
+
+```{r, echo = FALSE}
+plot_grid(title, body,
+  ncol = 1,
+  rel_heights = c(0.1, 1))
+```
+
+```{r, echo = FALSE}
+pink3 <- create("#DE5D83")
+pink4 <- create("#A94064")
+pink5 <- create("#C154C1")
+pink6 <- create("#FFC1CC")
+
+plot_grid(pink3, pink4, pink5, pink6) 
+```
+
