@@ -91,7 +91,7 @@ leaflet(int_death_data2) |>
 
 ```{r}
 
-#Graph #4 Interactive Categorical
+#Graph #2 Interactive Categorical
 #| warning: false
 
 states <- states |>

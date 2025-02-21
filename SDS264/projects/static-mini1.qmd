@@ -72,10 +72,10 @@ num_death_data |>
     caption = "Data Source: data.gov")
 ```
 Description Graph #1:
-
+This is a static graph with a numeric variable used to fill in the United States. Using data from data.gov, specifically from 2017 focusing on the amount of deaths due to heart disease. This is an informative map, as it shows which states have had the highest and lowest number of death by heart disease. The darker the state, the fewer deaths and the brighter the state, the greater amount of deaths. 
 
 Alt-Text Graph #1:
-
+This is a static graph with the numeric variable "deaths" filling in the map of the United States. Deaths stands for the number of deaths recorded per each state in 2017. It ranges from 0 to just over 60000 with colors associated being darker (purple) for lower numbers and brighter (yellow) for higher numbers of deaths. By viewing the appearance, one evident takeaway from the graph is California having the highest numbers of death due to heart disease in 2017. 
 
 
 ```{r}
@@ -124,4 +124,4 @@ cat_death_data <- death_data |>
 ```
 
 Description #2:
-
+This is a static categorical map of the United States and sourced from data.gov. Each state compares the number of deaths due to Alzheimer's and Stroke in 2017, whichever cause of death is recorded most per state is what that state is labelled. For example, Minnesota has more recorded deaths due to Alzheimer's then Strokes, so it is filled with purple to represent Alzheimer's. We can see that more states appear to have more deaths due to Stroke than Alzheimer's.
