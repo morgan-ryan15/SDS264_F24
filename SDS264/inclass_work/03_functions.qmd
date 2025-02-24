@@ -218,18 +218,19 @@ df <- tibble(
 )
 df$a[5] = NA
 df
+glimpse(df)
 
 rescale_basic <- function(x) {
   (x - min(x)) / (max(x) - min(x))
 }
 
-df |>
+df <- df|>
   filter(!is.na(a)) |>
   mutate(new_a = rescale_basic(a))
 ```
 
 **[Pause to Ponder:]** Do you notice anything in the output above that gives you pause?  
-
+*Our NA was filtered out.*
 
 #### Create an if statement to check if there are NAs; return an error if NAs exist
 
@@ -245,6 +246,7 @@ wt_mean(1:6, 1:3)
 ```
 
 **[Pause to Ponder:]** Why is the answer to the last call above 7.67?  Aren't we taking a weighted mean of 1-6, all of which are below 7?
+
 
 
 ```{r}
@@ -264,7 +266,7 @@ wt_mean(1:6, 1:3)
 ```
 
 **[Pause to Ponder:]** What does the `call.` option do?
-
+*When it is true, we get an error that pops up that isnt specific. When it's false, it allows for us to stop our program and let the user knw the error with a personalized message.*
 
 Now let's apply this to our rescaling function
 
