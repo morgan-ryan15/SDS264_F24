@@ -73,7 +73,7 @@ ggplot(spotify, aes(loudness, energy, label = artist)) +
 ```
 
 
-## The ggrepel package {auto-animate="true"}
+## The ggrepel package 
 
 ::: {.fragment .fade-in}
 - Consists of geom_text_repel() and geom_label_repel()
@@ -91,7 +91,7 @@ Learn more about the ggrepel package [here](https://ggrepel.slowkow.com/)!
 :::
 
 
-## Arguments: max.overlaps  {auto-animate="true"}
+## Arguments: max.overlaps {auto-animate="true"}
 Changes the number of labeled points
 
 ::: {.fragment .fade-in}
@@ -108,7 +108,7 @@ ggplot(aes(loudness, energy, label = artist)) +
 ```
 :::
 
-## Arguments: max.overlaps {auto-animate="true"}
+## Arguments: max.overlaps 
 
 ::: {.fragment .fade-in}
 Which looks like this before we add the argument
@@ -266,7 +266,7 @@ ggplot(mini_spotify, aes(avg_loudness, avg_energy, label = artist)) +
 ```
 :::
 
-## Aesthetics {auto-animate="true"}
+## Aesthetics 
 We have options to change how the labels appear 
 
 ::: incremental 
@@ -294,7 +294,7 @@ We have options to change how the labels appear
 ```
 
 
-## The positives and negatives of ggrepel {auto-animate="true"}
+## The positives and negatives of ggrepel
 
 ::: incremental
 - Benefits:
