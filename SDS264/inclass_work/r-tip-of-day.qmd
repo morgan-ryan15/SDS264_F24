@@ -1,0 +1,310 @@
+---
+title: "R Tip of the Day"
+subtitle: "The ggrepel Package"
+author: "Morgan Ryan"
+date: "April 22, 2025"
+format:
+  revealjs: 
+    slide-number: true
+    chalkboard: 
+      buttons: true
+    preview-links: auto
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+library(ggrepel)
+library(dplyr)
+library(ggplot2)
+spotify <- read_csv("https://joeroith.github.io/264_spring_2025/Data/spotify.csv")
+
+```
+
+```{r}
+#data
+mini_spotify <- spotify |>
+  filter(genre == c("pop", "r&b"), artist != "Sufjan Stevens") |>
+  group_by(artist) |>
+  summarize(avg_popular = mean(popularity),
+            avg_loudness = mean(loudness),
+            avg_energy = mean(energy)) 
+
+```
+
+## Imagine you wanted labeled data points in your graph {auto-animate="true"}
+- This example uses geom_text()
+
+```{r}
+ggplot(mini_spotify, aes(avg_loudness, avg_energy, label = artist)) +
+  geom_text() +
+  geom_point() +
+  theme_classic()
+```
+
+
+## Introducing the ggrepel package {auto-animate="true"}
+- Think about it like using jitter, but for labels!
+
+```{r}
+ggplot(mini_spotify, aes(avg_loudness, avg_energy, label = artist)) +
+  geom_label_repel() +
+  geom_point() +
+  theme_classic()
+
+```
+
+## Here is what changes when we use the ggrepel package instead of geom_text {auto-animate="true"}
+
+```{.r code-line-numbers="2"}
+ggplot(mini_spotify, aes(avg_loudness, avg_energy, label = artist)) +
+  geom_label_repel() +
+  geom_point() +
+  theme_classic()
+```
+
+
+```{.r code-line-numbers="2"}
+ggplot(spotify, aes(loudness, energy, label = artist)) +
+  geom_text() +
+  geom_point() +
+  theme_classic()
+```
+
+
+## The ggrepel package {auto-animate="true"}
+
+::: {.fragment .fade-in}
+- Consists of geom_text_repel() and geom_label_repel()
+- Both will repel text labels away from each other and edges of graph.
+:::
+
+::: incremental
+  - They have many possible arguments which allows for flexibility when creating labels
+  - geom_text_repel: Adds text to plot
+  - geom_label_repel: Draws rectangle underneath the text that makes it easier to read
+:::
+
+::: footer
+Learn more about the ggrepel package [here](https://ggrepel.slowkow.com/)!
+:::
+
+
+## Arguments: max.overlaps  {auto-animate="true"}
+Changes the number of labeled points
+
+::: {.fragment .fade-in}
+  - By altering max.overlaps, we can override the default of excluding a label once it has 10 overlaps
+  - The ensures that no text labels are discarded, regardless of how many overlaps there are with data or other labels
+
+```{.r code-line-numbers="4"}
+spotify |>
+filter(artist == c("Frank Ocean", "Camila Cabello")) |>
+ggplot(aes(loudness, energy, label = artist)) +
+  geom_text_repel(max.overlaps = Inf) +
+  geom_point() +
+  theme_classic()
+```
+:::
+
+## Arguments: max.overlaps {auto-animate="true"}
+
+::: {.fragment .fade-in}
+Which looks like this before we add the argument
+
+```{r}
+spotify |>
+filter(artist == c("Frank Ocean", "Camila Cabello")) |>
+ggplot(aes(loudness, energy, label = artist)) +
+  geom_text_repel() +
+  geom_point() +
+  theme_classic()
+```
+:::
+
+## Arguments: max.overlaps {auto-animate="true"}
+Then looks like this after we change argument to equal Inf
+
+::: {.fragment .fade-in}
+
+```{r}
+spotify |>
+filter(artist == c("Frank Ocean", "Camila Cabello")) |>
+ggplot(aes(loudness, energy, label = artist)) +
+  geom_text_repel(max.overlaps = Inf) +
+  geom_point() +
+  theme_classic()
+```
+:::
+
+## Arguments: segment.curvature {auto-animate="true"}
+Our line from data point to label can have curvature
+
+```{r}
+#| fig-width: 10
+#| fig-height: 3
+spotify |>
+  filter(artist == "Frank Ocean") |>
+ggplot(aes(loudness, energy, label = artist)) +
+  geom_text_repel(segment.curvature = 1) +
+  geom_point() +
+  theme_classic()
+```
+
+::: {.fragment .fade-in}
+Setting it equal to one will give it more curve
+
+```{.r code-line-numbers="4"}
+spotify |>
+  filter(artist == "Frank Ocean") |>
+ggplot(aes(loudness, energy, label = artist)) +
+  geom_text_repel(segment.curvature = 1) +
+  geom_point() +
+  theme_classic()
+```
+:::
+
+## Arguments: segment.curvature {auto-animate="true"}
+Setting the curvature value closer to zero will make the line straighter
+
+```{r}
+#| fig-width: 10
+#| fig-height: 3
+spotify |>
+  filter(artist == "Frank Ocean") |>
+ggplot(aes(loudness, energy, label = artist)) +
+  geom_text_repel(segment.curvature = 0.2) +
+  geom_point() +
+  theme_classic()
+```
+
+We set it close to zero but still want to show some curve
+
+```{.r code-line-numbers="4"}
+spotify |>
+  filter(artist == "Frank Ocean") |>
+ggplot(aes(loudness, energy, label = artist)) +
+  geom_text_repel(segment.curvature = 0.2) +
+  geom_point() +
+  theme_classic()
+```
+
+
+::: footer
+*We use the full spotify dataset to have a dramatic change with labels.*
+:::
+
+## Arguments: point.size {auto-animate="true"}
+We can prevent the label being repelled from it's data point
+
+```{r}
+#| fig-width: 10
+#| fig-height: 3
+  ggplot(mini_spotify, aes(avg_loudness, avg_energy, label = artist)) +
+  geom_label_repel(point.size = NA) +
+  geom_point() +
+  theme_classic()
+```
+
+::: {.fragment .fade-in}
+It won't change the labels repelling from each other or edges of the graph
+
+```{.r code-line-numbers="2"}
+ggplot(mini_spotify, aes(avg_loudness, avg_energy, label = artist)) +
+  geom_label_repel(point.size = NA) +
+  geom_point() +
+  theme_classic()
+```
+:::
+
+## Arguments: min.segment.length {auto-animate="true"}
+We can choose to have a line from label to point 
+
+::: {.fragment .fade-in}
+Never draw lines
+
+```{r}
+#| fig-width: 10
+#| fig-height: 3
+ggplot(mini_spotify, aes(avg_loudness, avg_energy, label = artist)) +
+  geom_text_repel(min.segment.length = Inf) +
+  geom_point() +
+  theme_classic()
+```
+:::
+
+::: {.fragment .fade-in}
+```{.r code-line-number="2"}
+ggplot(mini_spotify, aes(avg_loudness, avg_energy, label = artist)) +
+  geom_text_repel(min.segment.length = Inf) +
+  geom_label_repel() +
+  geom_point() +
+  theme_classic()
+```
+::: 
+
+## Arguments: min.segment.length {auto-animate="true"}
+::: {.fragment .fade-in}
+Always draw lines
+
+```{r}
+#| fig-width: 10
+#| fig-height: 3.0
+ggplot(mini_spotify, aes(avg_loudness, avg_energy, label = artist)) +
+  geom_text_repel(min.segment.length = 0) +
+  geom_point() +
+  theme_classic()
+```
+
+```{.r code-line-number="2"}
+ggplot(mini_spotify, aes(avg_loudness, avg_energy, label = artist)) +
+  geom_text_repel(min.segment.length = 0) +
+  geom_label_repel() +
+  geom_point() +
+  theme_classic()
+```
+:::
+
+## Aesthetics {auto-animate="true"}
+We have options to change how the labels appear 
+
+::: incremental 
+- We can change the: 
+  - Color of the text
+  - If the text is in bold, italic, etc
+  - If the line label is dashed or solid
+  - And much more!
+:::
+
+## Aesthetics {auto-animate="true"}
+
+```{r}
+  ggplot(mini_spotify, aes(avg_loudness, avg_energy, label = artist)) +
+    geom_label_repel(color = "forestgreen", fontface = "italic", segment.linetype = "dashed") +
+    geom_point() +
+    theme_classic() 
+```
+
+```{.r code-line-numbers="2"}
+  ggplot(mini_spotify, aes(avg_loudness, avg_energy, label = artist)) +
+    geom_label_repel(color = "forestgreen", fontface = "italic", segment.linetype = "dashed") +
+    geom_point() +
+    theme_classic() 
+```
+
+
+## The positives and negatives of ggrepel {auto-animate="true"}
+
+::: incremental
+- Benefits:
+    -   It's good for creating personalized labels/distinguishing already made labels
+    -   Allows for neat organization
+    -   Many arguments to functions
+- Downsides:
+    -   Knowing when to use repel text vs label
+      -   Even with spacing, it can still look cluttered
+    -   Good with specific data, but not always needed
+:::
+
+
